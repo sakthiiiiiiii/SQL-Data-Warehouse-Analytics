@@ -61,24 +61,6 @@ Running a script via sqlcmd
 Using PowerShell (Invoke-Sqlcmd)
 - Invoke-Sqlcmd -ServerInstance <server> -Database <db> -InputFile path\to\script.sql
 
-## Usage examples
-Example: incrementally load a fact table (simplified)
-- Use staging table to land daily data
-- Run merge statement to insert/update the fact table based on surrogate keys
-- Maintain audit columns (loaded_at, batch_id)
-
-Example T-SQL snippet (illustrative)
-```sql
--- Merge staging to fact
-MERGE dbo.FactSales AS target
-USING dbo.StageSales AS src
-ON target.BusinessKey = src.BusinessKey
-WHEN MATCHED THEN
-  UPDATE SET target.Amount = src.Amount, target.UpdatedAt = GETUTCDATE()
-WHEN NOT MATCHED THEN
-  INSERT (BusinessKey, DateKey, Amount, CreatedAt)
-  VALUES (src.BusinessKey, src.DateKey, src.Amount, GETUTCDATE());
-```
 
 ## Best practices & conventions
 - Use surrogate integer keys for dimensions
@@ -94,18 +76,3 @@ WHEN NOT MATCHED THEN
 - Use static checks for style and safety before running destructive scripts
 - Consider storing deployment scripts in `/ci/` and parameterizing connection strings
 
-## Contributing
-Contributions are welcome.
-- Open issues for bugs, suggestions, or patterns you'd like to add
-- Submit pull requests with clear descriptions and example data where relevant
-- Follow the repository folder structure and include notes in `/docs/` if adding new patterns
-
-## License
-Specify a license for the repository (e.g., MIT). If you don't have one yet, add a LICENSE file.
-
----
-
-If you want, I can:
-- tailor this README to the repository's exact folder/file layout (I can inspect the repo and include real file paths),
-- add badges (build, license, size),
-- generate a CONTRIBUTING.md and a sample LICENSE.
